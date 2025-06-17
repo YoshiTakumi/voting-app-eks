@@ -10,7 +10,7 @@ module "eks" {
   enable_irsa               = var.enable_irsa
   authentication_mode       = "API"
   eks_managed_node_groups = {
-    default = {
+    yorgos = {
       desired_size    = var.desired_size
       max_size        = var.max_size
       min_size        = var.min_size
