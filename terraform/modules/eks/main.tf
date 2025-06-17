@@ -42,6 +42,30 @@ resource "aws_iam_policy" "secrets_access" {
     ]
   })
 }
+
+module "secrets_irsa" {
+  source  = "terraform-aws-modules/iam/aws//modules/iam-role-for-service-accounts-eks"
+  version = "~> 5.0"
+
+  role_name = "voting-app-secrets-irsa"
+
+  oidc_providers = {
+    main = {
+      provider_arn = module.eks.oidc_provider_arn
+      namespace_service_accounts = [
+        "default:voting-app-sa"
+      ]
+    }
+  }
+
+  tags = var.tags
+}
+
+resource "aws_iam_role_policy_attachment" "secretsmanager_attach" {
+  role       = module.secrets_irsa.iam_role_name
+  policy_arn = aws_iam_policy.secrets_access.arn
+}
+
 module "ebs_csi_irsa_role" {
   source  = "terraform-aws-modules/iam/aws//modules/iam-role-for-service-accounts-eks"
   version = "~> 5.0"
@@ -49,12 +73,10 @@ module "ebs_csi_irsa_role" {
   role_name             = "ebs-csi-irsa-role"
   attach_ebs_csi_policy = true
 
-  # Use the OIDC provider that the EKS module created
   oidc_providers = {
     main = {
       provider_arn = module.eks.oidc_provider_arn
       namespace_service_accounts = [
-        # format: "<namespace>:<service-account-name>"
         "kube-system:ebs-csi-controller-sa"
       ]
     }
@@ -67,6 +89,5 @@ resource "aws_eks_addon" "ebs_csi_driver" {
   addon_name               = "aws-ebs-csi-driver"
   service_account_role_arn = module.ebs_csi_irsa_role.iam_role_arn
 
-  # ensure the cluster and IAM role exist first
   depends_on = [ module.eks, module.ebs_csi_irsa_role ]
 }
