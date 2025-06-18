@@ -25,46 +25,6 @@ module "eks" {
   }
 }
 
-resource "aws_iam_policy" "secrets_access" {
-  name        = "secretsmanager-access"
-  description = "Allow app to read secrets from Secrets Manager"
-
-  policy = jsonencode({
-    Version = "2012-10-17",
-    Statement = [
-      {
-        Effect = "Allow",
-        Action = [
-          "secretsmanager:GetSecretValue"
-        ],
-        Resource = "*"
-      }
-    ]
-  })
-}
-
-module "secrets_irsa" {
-  source  = "terraform-aws-modules/iam/aws//modules/iam-role-for-service-accounts-eks"
-  version = "~> 5.0"
-
-  role_name = "voting-app-secrets-irsa"
-
-  oidc_providers = {
-    main = {
-      provider_arn = module.eks.oidc_provider_arn
-      namespace_service_accounts = [
-        "default:voting-app-sa"
-      ]
-    }
-  }
-
-  tags = var.tags
-}
-
-resource "aws_iam_role_policy_attachment" "secretsmanager_attach" {
-  role       = module.secrets_irsa.iam_role_name
-  policy_arn = aws_iam_policy.secrets_access.arn
-}
 
 module "ebs_csi_irsa_role" {
   source  = "terraform-aws-modules/iam/aws//modules/iam-role-for-service-accounts-eks"
