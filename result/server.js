@@ -81,7 +81,7 @@ app.get('/', function (req, res) {
   res.sendFile(path.resolve(__dirname + '/views/index.html'));
 });
 
-server.listen(port, function () {
+server.listen(port, '0.0.0.0' ,function () {
   var port = server.address().port;
   console.log('App running on port ' + port);
 });
