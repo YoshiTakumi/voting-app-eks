@@ -4,3 +4,8 @@ bin/
 obj/
 .vs/
 node_modules/
+*.terraform
+*.tfvars
+*.tfstate
+*.backup
+*.hcl
