@@ -53,15 +53,6 @@ jobs:
         run: |
           aws eks update-kubeconfig --region ${{ secrets.AWS_REGION }} --name ${{ secrets.AWS_CLUSTER }}
 
-      - name: Generate the final deployment template
-        run: |
-          sudo apt-get update
-          sudo apt-get install -y gettext-base
-          export IMAGE_NAME="docker.io/${{ secrets.DOCKER_USERNAME }}/voting-app-vote:${{ env.IMAGE_TAG }}"
-          envsubst < k8s/deployment.template.yaml > k8s/deployment.yaml
-          echo "Final deployment.yaml:"
-          cat k8s/deployment.yaml
-
       - name: Deploy to EKS
         run: |
           kubectl apply -f k8s/
