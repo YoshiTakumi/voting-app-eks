@@ -9,3 +9,4 @@ node_modules/
 *.tfstate
 *.backup
 *.hcl
+k8s/sa.yaml
