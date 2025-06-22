@@ -3,7 +3,9 @@ kind: Ingress
 metadata:
   name: voting-app-ingress
   annotations:
-    nginx.ingress.kubernetes.io/rewrite-target: /
+    nginx.ingress.kubernetes.io/proxy-read-timeout: "3600"
+    nginx.ingress.kubernetes.io/proxy-send-timeout: "3600"
+    nginx.ingress.kubernetes.io/websocket-services: "vote-service,result-service"
 spec:
   ingressClassName: nginx
   rules:

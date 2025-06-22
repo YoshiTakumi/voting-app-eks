@@ -3,7 +3,7 @@ kind: Deployment
 metadata:
   name: result-deployment
 spec:
-  replicas: 1
+  replicas: 3
   selector:
     matchLabels:
       app: result
@@ -32,3 +32,5 @@ spec:
                 key: POSTGRES_PASSWORD
           - name: PG_DATABASE
             value: postgres
+          - name: PORT
+            value: "80"
