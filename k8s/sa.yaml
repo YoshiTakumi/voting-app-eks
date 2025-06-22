@@ -4,4 +4,4 @@ metadata:
   name: voting-app-sa
   namespace: default
   annotations:
-    eks.amazonaws.com/role-arn: arn:aws:iam::xxxxxxxxx:role/voting-app-secrets-irsa 
+    eks.amazonaws.com/role-arn: arn:aws:iam::438465169137:role/voting-app-secrets-irsa 
