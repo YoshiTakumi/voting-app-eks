@@ -34,6 +34,26 @@ jobs:
             ${{ secrets.DOCKER_USERNAME }}/voting-app-vote:${{ env.IMAGE_TAG }}
             ${{ secrets.DOCKER_USERNAME }}/voting-app-vote:latest
 
+      - name: Build and push result image
+        uses: docker/build-push-action@v6
+        with:
+          context: ./result
+          file: ./result/Dockerfile
+          push: true
+          tags: |
+            ${{ secrets.DOCKER_USERNAME }}/voting-app-result:${{ env.IMAGE_TAG }}
+            ${{ secrets.DOCKER_USERNAME }}/voting-app-result:latest
+
+      - name: Build and push worker image
+        uses: docker/build-push-action@v6
+        with:
+          context: ./worker
+          file: ./worker/Dockerfile
+          push: true
+          tags: |
+            ${{ secrets.DOCKER_USERNAME }}/voting-app-worker:${{ env.IMAGE_TAG }}
+            ${{ secrets.DOCKER_USERNAME }}/voting-app-worker:latest
+
       - name: Configure AWS Credentials
         uses: aws-actions/configure-aws-credentials@v4
         with:
